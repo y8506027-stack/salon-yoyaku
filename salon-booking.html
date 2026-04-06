@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご予約</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f8f4ef;
+    --dark: #1a1612;
+    --gold: #b8965a;
+    --gold-light: #d4b483;
+    --stone: #8a7d6e;
+    --border: #d9cfc4;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+  }
+
+  /* ── header ── */
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp .8s ease both;
+  }
+
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: .35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: .04em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto 0;
+  }
+
+  /* ── card ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    width: 100%;
+    max-width: 560px;
+    padding: 48px 44px;
+    animation: fadeUp .8s .15s ease both;
+  }
+
+  /* ── field ── */
+  .field {
+    margin-bottom: 28px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+
+  label .req {
+    color: var(--gold);
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    padding: 13px 16px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    color: var(--dark);
+    outline: none;
+    transition: border-color .2s;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  /* ── select wrapper ── */
+  .select-wrap {
+    position: relative;
+  }
+
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  /* ── time grid ── */
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .time-btn {
+    padding: 10px 4px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+  }
+
+  .time-btn:hover {
+    border-color: var(--gold-light);
+    color: var(--dark);
+  }
+
+  .time-btn.selected {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+
+  .time-hint {
+    font-size: 11px;
+    color: var(--stone);
+    margin-top: 8px;
+    letter-spacing: .05em;
+  }
+
+  /* ── section label ── */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+
+  /* ── submit ── */
+  .submit-wrap {
+    margin-top: 36px;
+    text-align: center;
+  }
+
+  button[type="submit"] {
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    padding: 16px 52px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    letter-spacing: .25em;
+    cursor: pointer;
+    transition: background .2s;
+    border-radius: 1px;
+  }
+
+  button[type="submit"]:hover {
+    background: var(--gold);
+  }
+
+  /* ── success ── */
+  #success {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+    animation: fadeUp .5s ease both;
+  }
+
+  #success .check {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  #success h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  #success p {
+    font-size: 13px;
+    color: var(--stone);
+    line-height: 1.9;
+  }
+
+  /* ── LINE notice ── */
+  .line-notice {
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    font-size: 12px;
+    color: var(--stone);
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  .line-notice strong {
+    color: var(--dark);
+    font-weight: 400;
+  }
+
+  .line-notice code {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--gold);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 36px 24px; }
+    .time-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Reservation</p>
+  <h1>ご予約<br><em>フォーム</em></h1>
+  <div class="divider"></div>
+</header>
+
+<div class="card">
+  <form id="bookingForm" action="https://formspree.io/f/xzdkkwkv" method="POST">
+
+    <div class="field">
+      <label>お名前 <span class="req">*</span></label>
+      <input type="text" id="name" name="お名前" placeholder="山田 花子" required>
+    </div>
+
+    <div class="field">
+      <label>お電話番号 <span class="req">*</span></label>
+      <input type="tel" id="phone" name="電話番号" placeholder="090-0000-0000" required>
+    </div>
+
+    <div class="field">
+      <label>メニュー <span class="req">*</span></label>
+      <div class="select-wrap">
+        <select id="menu" name="メニュー" required>
+          <option value="">選択してください</option>
+          <option value="60分コース（60min）">60分コース</option>
+          <option value="90分コース（90min）">90分コース</option>
+          <option value="120分コース（120min）">120分コース</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ご希望日 <span class="req">*</span></label>
+      <input type="date" id="date" name="ご希望日" required>
+    </div>
+
+    <div class="field">
+      <p class="section-label">ご希望時間 <span class="req">*</span></p>
+      <div class="time-grid" id="timeGrid">
+      </div>
+      <p class="time-hint" id="timeHint" style="display:none">※ 選択中：<span id="selectedTimeLabel"></span></p>
+      <input type="hidden" id="time" name="ご希望時間" required>
+    </div>
+
+    <div class="field">
+      <label>備考・ご要望</label>
+      <textarea id="note" name="備考・ご要望" placeholder="アレルギーや施術に関するご要望など、お気軽にどうぞ"></textarea>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit">予約を送信する</button>
+    </div>
+  </form>
+
+  <div id="success">
+    <div class="check">✦</div>
+    <h2>ご予約ありがとうございます</h2>
+    <p id="successDetail"></p>
+  </div>
+
+
+</div>
+
+<script>
+  // 時間ボタン生成
+  const times = [];
+  for (let h = 10; h <= 19; h++) {
+    times.push(`${h}:00`);
+    if (h < 19) times.push(`${h}:30`);
+  }
+
+  const grid = document.getElementById('timeGrid');
+  times.forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'time-btn';
+    btn.textContent = t;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('time').value = t;
+      document.getElementById('selectedTimeLabel').textContent = t;
+      document.getElementById('timeHint').style.display = 'block';
+    });
+    grid.appendChild(btn);
+  });
+
+  // 今日以降のみ選択可能
+  const dateInput = document.getElementById('date');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+
+  // フォーム送信
+  document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const time = document.getElementById('time').value;
+    if (!time) {
+      alert('ご希望時間を選択してください');
+      return;
+    }
+
+    const form = e.target;
+    const data = new FormData(form);
+
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      const date = document.getElementById('date').value;
+      const menu = document.getElementById('menu').value;
+      form.style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      document.getElementById('successDetail').innerText =
+        `${date}（${time}）\n${menu}\nにてお待ちしております。`;
+    } else {
+      alert('送信に失敗しました。もう一度お試しください。');
+    }
+  });
+</script>
+</body>
+</html>
